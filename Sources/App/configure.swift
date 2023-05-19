@@ -10,6 +10,9 @@ public func configure(_ app: Application) async throws {
     // register database
     app.databases.use(.postgres(hostname: "localhost", username: "postgres", password: "", database: "grocerydb"), as: .psql)
     
+    // register migrations
+    app.migrations.add(CreateUsersTableMigrations())
+    
     // register routes
     try routes(app)
 }
