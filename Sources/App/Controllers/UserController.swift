@@ -30,14 +30,14 @@ class UserController: RouteCollection {
         guard let existingUser = try await User.query(on: req.db)
             .filter(\.$username == user.username)
             .first() else {
-            throw Abort(.unauthorized)
+            return LoginResponseDTO(error: true, reason: "Username is not found.")
         }
         
         // validate the password
         let result = try await req.password.async.verify(user.password, created: existingUser.password)
         
         if !result {
-            throw Abort(.unauthorized)
+            return LoginResponseDTO(error: true, reason: "Password is incorrect.")
         }
         
         // generate the token and return it to the user
